@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <header name='Access-Control-Allow-Origin' value='*'></header>
+    <meta charset='utf-8'/>
+    <style type='text/css'>
+        body {
+            margin: 0 px;
+            padding: 0 px;
+        }
+
+        canvas {
+            image-rendering: optimizeSpeed;             /* Older versions of FF          */
+            image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+            image-rendering: -webkit-optimize-contrast; /* Safari                        */
+            image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+            image-rendering: pixelated;                 /* Awesome future-browsers       */
+            -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+        }
+    </style>
+    <script src='./src/s2d.js' type='text/javascript' ></script>
+    <script src='./src/main.js' type='text/javascript' ></script>
+</head>
+<body onload='main();'>
+	<canvas id='canvas'></canvas>
+</body>
+</html>
