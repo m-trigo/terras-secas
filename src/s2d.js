@@ -448,6 +448,10 @@ class s2d {
             s2d.state.sprite.sheets[name].scale.y = y;
         },
 
+        frameCount(name) {
+            return s2d.state.sprite.sheets[name].cols * s2d.state.sprite.sheets[name].rows;
+        },
+
         draw(name, x, y, index = 0) {
             let sprite = s2d.state.sprite.sheets[name];
             let row = Math.floor(index / sprite.cols);
