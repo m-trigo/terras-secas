@@ -521,7 +521,31 @@ class s2d {
 
         toString(v) {
             return `(${v.x}, ${v.y})`;
-        }
+        },
+
+        get zero() {
+            return s2d.vec.make(0, 0);
+        },
+
+        get one() {
+            return s2d.vec.make(1, 1);
+        },
+
+        get left() {
+            return s2d.vec.make(-1, 0);
+        },
+
+        get right() {
+            return s2d.vec.make(1, 0);
+        },
+
+        get up() {
+            return s2d.vec.make(0, -1);
+        },
+
+        get down() {
+            return s2d.vec.make(0, 1);
+        },
     };
 
     static rect = {
