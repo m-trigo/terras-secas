@@ -73,6 +73,10 @@ class s2d {
             sheets: {}
         },
 
+        anim: {
+            definitions: {}
+        },
+
         effects: {
 
             screenShake: {
@@ -479,6 +483,67 @@ class s2d {
             context.drawImage(sprite.image, sx, sy, width, height, x, y, dWidth, dHeight);
             context.restore();
         }
+    };
+
+    static anim = {
+        
+        defineAnimation(name, sprite, params = {}) {
+
+            let {
+                runtime = 1,
+                speeds = [
+                    { index: 0, speed: 1 },
+                ],
+                scale = { x: 1, y: 1 }
+            } = params;
+        
+            s2d.state.anim.definitions[name] = (overrides = {}) => {
+        
+                let {
+                    runtimeOverride,
+                    speedsOverride,
+                    scaleOverride
+                } = overrides;
+        
+                runtime = runtimeOverride ?? runtime;
+                speeds = speedsOverride ?? speeds;
+                scale = scaleOverride ?? scale;
+        
+                let frameIndex = 0;
+                let frameCount = s2d.sprite.frameCount(sprite);
+                let frameRuntime = runtime/frameCount;
+                let frameSpeed = speeds[0].speed;
+                let elapsedOnFrame = 0;
+        
+                return (dt, x, y) => {
+                    this.name = name;
+        
+                    elapsedOnFrame += dt;
+        
+                    let speedChange = speeds.find(e => e.index == frameIndex);
+                    if (speedChange) {
+                        frameSpeed = speedChange.speed;
+                    }
+        
+                    if (elapsedOnFrame > frameRuntime/frameSpeed) {
+        
+                        elapsedOnFrame = elapsedOnFrame % frameRuntime;
+                        frameIndex++;
+        
+                        if (frameIndex == frameCount) {
+                            frameIndex = 0;
+                        }
+                    }
+        
+                    s2d.sprite.scale(sprite, scale.x, scale.y);
+                    s2d.sprite.draw(sprite, x, y, frameIndex);
+                }
+            };
+        },
+
+        createAnimation(name, overrides) {
+            return s2d.state.anim.definitions[name](overrides);
+        },
     };
 
     static vec = {
