@@ -25,7 +25,7 @@ class s2d {
             frameSkipThreshold: 0.2,
             lastSecondTimestamps: [],
             fixedTimestep: false,
-            fixedTimestepDt: 1/60
+            fixedTimestepDt: 1 / 60
         },
 
         input: {
@@ -39,11 +39,11 @@ class s2d {
 
             buttons: {
                 up: { pressed: false, repeat: false, keys: ['Up', 'ArrowUp', 'W'] },
-                left: { pressed: false, repeat: false, keys: ['Left', 'ArrowLeft', 'A']  },
-                down: { pressed: false, repeat: false, keys: ['Down', 'ArrowDown', 'S']  },
-                right: { pressed: false, repeat: false, keys: ['Right', 'ArrowRight', 'D']  },
-                o: { pressed: false, repeat: false, keys: ['Enter' , 'Spacebar', ' ']  },
-                x: { pressed: false, repeat: false, keys: ['Escape', 'Delete']  }
+                left: { pressed: false, repeat: false, keys: ['Left', 'ArrowLeft', 'A'] },
+                down: { pressed: false, repeat: false, keys: ['Down', 'ArrowDown', 'S'] },
+                right: { pressed: false, repeat: false, keys: ['Right', 'ArrowRight', 'D'] },
+                o: { pressed: false, repeat: false, keys: ['Enter', 'Spacebar', ' '] },
+                x: { pressed: false, repeat: false, keys: ['Escape', 'Delete'] }
             },
 
             mouse: {
@@ -195,16 +195,16 @@ class s2d {
             }
 
             /* Touch Events */
-            s2d.canvas.element().ontouchmove = e =>  {
+            s2d.canvas.element().ontouchmove = e => {
                 s2d.state.input.raw.mouse.x = e.changedTouches[0].clientX;
                 s2d.state.input.raw.mouse.y = e.changedTouches[0].clientY;
             }
-            s2d.canvas.element().ontouchstart = e =>  {
+            s2d.canvas.element().ontouchstart = e => {
                 s2d.state.input.raw.mouse.x = e.changedTouches[0].clientX;
                 s2d.state.input.raw.mouse.y = e.changedTouches[0].clientY;
                 s2d.state.input.raw.mouse.pressed = true
             }
-            s2d.canvas.element().ontouchend = e =>  {
+            s2d.canvas.element().ontouchend = e => {
                 s2d.state.input.raw.mouse.x = e.changedTouches[0].clientX;
                 s2d.state.input.raw.mouse.y = e.changedTouches[0].clientY;
                 s2d.state.input.raw.mouse.pressed = false
@@ -231,7 +231,7 @@ class s2d {
 
                 /* Frame Data*/
                 let now = new Date()
-                let dt = (now - s2d.state.time.lastUpdate)/1000;
+                let dt = (now - s2d.state.time.lastUpdate) / 1000;
                 s2d.state.time.lastUpdate = now;
                 if (s2d.state.time.frameSkipThreshold && dt > s2d.state.time.frameSkipThreshold) {
                     console.log(`Frame discarded: ${dt} seconds`);
@@ -368,9 +368,9 @@ class s2d {
 
         loadAudio(name, src) {
             let track = new Audio(src);
-            track.start = function() {
+            track.start = function () {
                 this.load();
-                this.oncanplaythrough = () =>  {
+                this.oncanplaythrough = () => {
                     this.play();
                     this.oncanplaythrough = null;
                 }
@@ -387,7 +387,7 @@ class s2d {
                 src,
                 rows,
                 cols,
-                scale: { x: scale, y : scale },
+                scale: { x: scale, y: scale },
                 opacity: 1,
                 image: new Image()
             };
@@ -486,7 +486,7 @@ class s2d {
     };
 
     static anim = {
-        
+
         defineAnimation(name, sprite, params = {}) {
 
             let {
@@ -496,45 +496,45 @@ class s2d {
                 ],
                 scale = { x: 1, y: 1 }
             } = params;
-        
+
             s2d.state.anim.definitions[name] = (overrides = {}) => {
-        
+
                 let {
                     runtimeOverride,
                     speedsOverride,
                     scaleOverride
                 } = overrides;
-        
+
                 runtime = runtimeOverride ?? runtime;
                 speeds = speedsOverride ?? speeds;
                 scale = scaleOverride ?? scale;
-        
+
                 let frameIndex = 0;
                 let frameCount = s2d.sprite.frameCount(sprite);
-                let frameRuntime = runtime/frameCount;
+                let frameRuntime = runtime / frameCount;
                 let frameSpeed = speeds[0].speed;
                 let elapsedOnFrame = 0;
-        
+
                 return (dt, x, y) => {
                     this.name = name;
-        
+
                     elapsedOnFrame += dt;
-        
+
                     let speedChange = speeds.find(e => e.index == frameIndex);
                     if (speedChange) {
                         frameSpeed = speedChange.speed;
                     }
-        
-                    if (elapsedOnFrame > frameRuntime/frameSpeed) {
-        
+
+                    if (elapsedOnFrame > frameRuntime / frameSpeed) {
+
                         elapsedOnFrame = elapsedOnFrame % frameRuntime;
                         frameIndex++;
-        
+
                         if (frameIndex == frameCount) {
                             frameIndex = 0;
                         }
                     }
-        
+
                     s2d.sprite.scale(sprite, scale.x, scale.y);
                     s2d.sprite.draw(sprite, x, y, frameIndex);
                 }
@@ -573,7 +573,7 @@ class s2d {
         },
 
         div(v, scalar) {
-            return this.mult(v, 1/scalar);
+            return this.mult(v, 1 / scalar);
         },
 
         draw(v, color = '#FF77A8') {
