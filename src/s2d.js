@@ -51,6 +51,9 @@ class s2d {
                 pressed: false,
                 repeat: false
             },
+
+            maxTimeBetweenDoublePress: 0.4,
+            history: []
         },
 
         assets: {
@@ -222,6 +225,14 @@ class s2d {
                             button.pressed = true;
                         }
                     });
+
+                    if (button.pressed && !button.repeat) {
+                        s2d.state.input.history.push({
+                            name,
+                            button,
+                            when: s2d.time.elapsed()
+                        });
+                    }
                 }
 
                 /* Mouse Inputs */
@@ -320,16 +331,41 @@ class s2d {
             s2d.state.input.buttons[name] = { pressed: false, repeat: false, keys };
         },
 
-        buttonDown(name) {
-            return s2d.state.input.buttons[name].pressed;
+        setMaxTimeBetweenDoublePress(seconds) {
+            s2d.state.input.maxTimeBetweenDoublePress = seconds;
         },
 
         buttonPressed(name) {
             return s2d.state.input.buttons[name].pressed && !s2d.state.input.buttons[name].repeat;
         },
 
+        buttonDown(name) {
+            return s2d.state.input.buttons[name].pressed;
+        },
+
+        buttonRepeat(name) {
+            return s2d.state.input.buttons[name].pressed && s2d.state.input.buttons[name].repeat;
+        },
+
         buttonReleased(name) {
             return !s2d.state.input.buttons[name].pressed && s2d.state.input.buttons[name].repeat;
+        },
+
+        isDouble(name) {
+            let historyLength = s2d.state.input.history.length;
+            if (historyLength < 2) {
+                return false;
+            }
+
+            let currentPress = s2d.state.input.history[historyLength - 1];
+            let lastPress = s2d.state.input.history[historyLength - 2];
+            if (currentPress.name != name || lastPress.name != name) {
+                return false;
+            }
+
+            let current = currentPress.when;
+            let last = lastPress.when;
+            return current - last < s2d.state.input.maxTimeBetweenDoublePress;
         },
 
         mousePosition() {
