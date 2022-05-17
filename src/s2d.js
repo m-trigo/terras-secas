@@ -52,6 +52,8 @@ class s2d {
                 repeat: false
             },
 
+            timeToIdle: 0.5,
+            idleTriggers: ['up', 'down', 'left', 'right', 'o', 'x'],
             maxTimeBetweenDoublePress: 0.4,
             history: []
         },
@@ -333,6 +335,39 @@ class s2d {
 
         setMaxTimeBetweenDoublePress(seconds) {
             s2d.state.input.maxTimeBetweenDoublePress = seconds;
+        },
+
+        isIdle() {
+            let now = s2d.time.elapsed();
+            let history = s2d.state.input.history;
+            let i = history.length - 1;
+            while (i >= 0) {
+                let input = history[i];
+                if (!s2d.state.input.idleTriggers.includes(input.name)) {
+                    continue;
+                }
+
+                if (s2d.input.buttonDown(input.name)) {
+                    return false;
+                }
+
+                let timeSinceInput = now - input.when;
+                if (timeSinceInput < s2d.state.input.timeToIdle) {
+                    return false;
+                }
+
+                i--;
+            }
+
+            return true;
+        },
+
+        setTimeToIdle(seconds) {
+            s2d.state.input.timeToIdle = seconds;
+        },
+
+        setIdleTriggers(buttons) {
+            s2d.state.input.idleTriggers = buttons
         },
 
         buttonPressed(name) {
