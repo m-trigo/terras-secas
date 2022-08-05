@@ -82,6 +82,9 @@ class s2d {
             definitions: {}
         },
 
+        data: {
+        },
+
         effects: {
 
             screenShake: {
@@ -272,6 +275,7 @@ class s2d {
             s2d.state.core?.load?.();
 
             Promise.allSettled(s2d.state.assets.loadingPromises).then(e => {
+                s2d.state.data = s2d.data.deepCopy(__data__);
                 s2d.canvas.clear();
                 s2d.state.core?.init?.();
                 s2d.state.time.lastUpdate = new Date();
@@ -617,6 +621,25 @@ class s2d {
         },
     };
 
+    static data = {
+        
+        read(name) {
+            return s2d.data.deepCopy(s2d.state.data[name]);
+        },
+
+        write(name, value) {
+            s2d.state.data[name] = s2d.data.deepCopy(value);
+        },
+
+        download(filename = 'data.js') {
+            s2d.system.download(filename, "let __data__ = " + JSON.stringify(s2d.state.data, null, 4));
+        },
+
+        deepCopy(object) {
+            return JSON.parse(JSON.stringify(object));
+        }
+    };
+
     static vec = {
 
         make(x, y) {
@@ -810,6 +833,19 @@ class s2d {
             }
 
             context.restore();
+        }
+    };
+
+    static system = {
+
+        download(filename, content) {
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
         }
     };
 };
