@@ -55,7 +55,11 @@ class s2d {
             timeToIdle: 0.5,
             idleTriggers: ['up', 'down', 'left', 'right', 'o', 'x'],
             maxTimeBetweenDoublePress: 0.4,
-            history: []
+            maxTimeBetweenDoubleClick: 0.4,
+            history: {
+                buttons: [],
+                mouse: []
+            }
         },
 
         assets: {
@@ -232,7 +236,7 @@ class s2d {
                     });
 
                     if (button.pressed && !button.repeat) {
-                        s2d.state.input.history.push({
+                        s2d.state.input.history.buttons.push({
                             name,
                             button,
                             when: s2d.time.elapsed()
@@ -244,6 +248,13 @@ class s2d {
                 s2d.state.input.mouse.position = s2d.canvas.coord(s2d.state.input.raw.mouse.x, s2d.state.input.raw.mouse.y);
                 s2d.state.input.mouse.repeat = s2d.state.input.mouse.pressed;
                 s2d.state.input.mouse.pressed = s2d.state.input.raw.mouse.pressed;
+
+                if (s2d.state.input.mouse.pressed && !s2d.state.input.mouse.repeat) {
+                    s2d.state.input.history.mouse.push({
+                        state: s2d.state.input.mouse,
+                        when: s2d.time.elapsed()
+                    });
+                }
 
                 /* Frame Data*/
                 let now = new Date()
@@ -341,9 +352,13 @@ class s2d {
             s2d.state.input.maxTimeBetweenDoublePress = seconds;
         },
 
+        setMaxTimeBetweenDoubleClick(seconds) {
+            s2d.state.input.maxTimeBetweenDoubleClick = seconds;
+        },
+
         isIdle() {
             let now = s2d.time.elapsed();
-            let history = s2d.state.input.history;
+            let history = s2d.state.input.history.buttons;
             let i = history.length - 1;
             while (i >= 0) {
                 let input = history[i];
@@ -390,14 +405,15 @@ class s2d {
             return !s2d.state.input.buttons[name].pressed && s2d.state.input.buttons[name].repeat;
         },
 
-        isDouble(name) {
-            let historyLength = s2d.state.input.history.length;
+        buttonPressedTwice(name) {
+            let history = s2d.state.input.history.buttons;
+            let historyLength = history.length;
             if (historyLength < 2) {
                 return false;
             }
 
-            let currentPress = s2d.state.input.history[historyLength - 1];
-            let lastPress = s2d.state.input.history[historyLength - 2];
+            let currentPress = history[historyLength - 1];
+            let lastPress = history[historyLength - 2];
             if (currentPress.name != name || lastPress.name != name) {
                 return false;
             }
@@ -414,12 +430,16 @@ class s2d {
             };
         },
 
+        mousePressed() {
+            return s2d.state.input.mouse.pressed && !s2d.state.input.mouse.repeat
+        },
+
         mouseDown() {
             return s2d.state.input.mouse.pressed;
         },
 
-        mousePressed() {
-            return s2d.state.input.mouse.pressed && !s2d.state.input.mouse.repeat
+        mouseRepeat() {
+            return s2d.state.input.mouse.pressed && s2d.state.input.mouse.repeat
         },
 
         mouseReleased() {
@@ -427,6 +447,18 @@ class s2d {
                 console.log(s2d.state.input.mouse.repeat);
             }
             return !s2d.state.input.mouse.pressed && s2d.state.input.mouse.repeat;
+        },
+
+        mousePressedTwice() {
+            let history = s2d.state.input.history.mouse;
+            let historyLength = history.length;
+            if (historyLength < 2) {
+                return false;
+            }
+
+            let current = history[historyLength - 1].when;
+            let last = history[historyLength - 2].when;
+            return current - last < s2d.state.input.maxTimeBetweenDoubleClick;;
         }
     };
 
