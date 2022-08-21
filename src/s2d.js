@@ -328,6 +328,13 @@ class s2d {
             let context = s2d.canvas.context();
             context.fillStyle = color;
             context.fillRect(0, 0, s2d.canvas.width(), s2d.canvas.height());
+        },
+
+        resizeTo(newWidth, newHeight) {
+            s2d.canvas.element().width = newWidth;
+            s2d.canvas.element().style.width = newWidth;
+            s2d.canvas.element().height = newHeight;
+            s2d.canvas.element().style.height = newHeight;
         }
     };
 
