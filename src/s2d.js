@@ -709,6 +709,10 @@ class s2d {
             return this.mult(v, 1 / scalar);
         },
 
+        distance(u, v) {
+            return Math.sqrt(Math.pow(u.x - v.x, 2) + Math.pow(u.y - v.y, 2));
+        },
+
         draw(v, color = '#FF77A8') {
             let context = s2d.canvas.context();
             context.save();
