@@ -566,6 +566,16 @@ class s2d {
             s2d.state.sprite.sheets[name].scale.y = y;
         },
 
+        width(name) {
+            let sprite = s2d.state.sprite.sheets[name];
+            return sprite.scale.x * sprite.image.width / sprite.cols;
+        },
+
+        height(name) {
+            let sprite = s2d.state.sprite.sheets[name];
+            return sprite.scale.y * sprite.image.height / sprite.rows;
+        },
+
         frameCount(name) {
             return s2d.state.sprite.sheets[name].cols * s2d.state.sprite.sheets[name].rows;
         },
