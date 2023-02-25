@@ -462,9 +462,6 @@ class s2d {
         },
 
         mouseReleased() {
-            if (!s2d.state.input.mouse.pressed) {
-                console.log(s2d.state.input.mouse.repeat);
-            }
             return !s2d.state.input.mouse.pressed && s2d.state.input.mouse.repeat;
         },
 
