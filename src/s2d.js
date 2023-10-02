@@ -816,6 +816,21 @@ class s2d {
             return xContains && yContains;
         },
 
+        scale(rect, x, y, fromCenter = false) {
+            let result = s2d.data.deepCopy(rect);
+            let dx = result.end.x - result.start.x;
+            let dy = result.end.y - result.start.y;
+
+            result.end.x = dx * x + result.start.x;
+            result.end.y = dy * y + result.start.y;
+            if (fromCenter) {
+                result.start.x -= dx * (x - 1);
+                result.start.y -= dy * (y - 1);
+            }
+
+            return result;
+        },
+
         draw(rect, color = '#FF77A8') {
             let context = s2d.canvas.context();
             context.save();
