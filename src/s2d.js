@@ -519,7 +519,7 @@ class s2d {
 
     static text = {
 
-        registerFont(name, family, size, weight) {
+        registerFont(name, family, size, weight = "") {
             s2d.state.text.fonts[name] = { family, size, weight }
         },
 
