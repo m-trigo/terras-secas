@@ -537,6 +537,28 @@ class s2d {
             context.fillStyle = s2d.state.text.color;
             context.fillText(text, x, y);
             context.restore();
+        },
+
+        textWidth(text, fontName = "") {
+            let context = s2d.canvas.context();
+            if (fontName === "") {
+                fontName = s2d.state.text.active;
+            }
+            let font = s2d.state.text.fonts[fontName];
+            context.save();
+            context.font = `${font.weight} ${font.size}px ${font.family}`;
+            context.textBaseline = 'top';
+            let width = context.measureText(text).width
+            context.restore();
+            return width;
+        },
+
+        textHeight(fontName = "") {
+            if (fontName === "") {
+                fontName = s2d.state.text.active;
+            }
+            let font = s2d.state.text.fonts[fontName];
+            return font.size;
         }
     };
 
