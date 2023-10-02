@@ -114,6 +114,47 @@ class s2d {
                 }
             },
 
+            fade: {
+                fadeThis: null,
+                fadeTime: 0,
+                startOpacity: 1,
+                endOpacity: 0,
+                endCallback: null,
+                done: false,
+                elapsed: 0,
+
+                isActive: function () {
+                    return 0 < this.elapsed && this.elapsed <= this.fadeTime;
+                },
+
+                start() {
+                    this.elapsed = Number.EPSILON;
+                },
+
+                update(dt) {
+                    if (!this.isActive()) {
+                        return;
+                    }
+
+                    this.elapsed += dt;
+                    let progress = Math.min(this.elapsed / this.fadeTime, 1);
+                    let opacity = (this.endOpacity - this.startOpacity) * progress + this.startOpacity;
+
+                    let context = s2d.canvas.context();
+                    context.save();
+                    context.globalAlpha = opacity;
+                    this.fadeThis();
+                    context.restore();
+
+                    if (progress >= 1 && !this.done) {
+                        this.done = true;
+                        if (this.endCallback) {
+                            this.endCallback();
+                        }
+                    }
+                }
+            },
+
             screenFade: {
                 color: '#000000',
                 fadeTime: 1,
@@ -871,6 +912,19 @@ class s2d {
             if (s2d.state.effects.screenShake.offset.x != 0 || s2d.state.effects.screenShake.offset.y != 0) {
                 s2d.canvas.context().translate(s2d.state.effects.screenShake.offset.x, s2d.state.effects.screenShake.offset.y);
             }
+        },
+
+        fade(fadeThis, startOpacity, endOpacity, fadeTime, endCallback) {
+            s2d.state.effects.fade.fadeThis = fadeThis;
+            s2d.state.effects.fade.fadeTime = fadeTime;
+            s2d.state.effects.fade.startOpacity = startOpacity;
+            s2d.state.effects.fade.endOpacity = endOpacity;
+            s2d.state.effects.fade.endCallback = endCallback;
+            s2d.state.effects.fade.start();
+        },
+
+        updateFade(dt) {
+            s2d.state.effects.fade.update(dt);
         },
 
         fadeScreen(color, fadeTime, fadeInCallback, fadeOutCallback) {
