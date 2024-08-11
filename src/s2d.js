@@ -453,6 +453,15 @@ class s2d {
             s2d.state.input.idleTriggers = buttons
         },
 
+        anyButtonPressed() {
+            for (let buttonName of Object.keys(s2d.state.input.buttons)) {
+                if (s2d.state.input.buttons[buttonName].pressed) {
+                    return true;
+                }
+            }
+            return false;
+        },
+
         buttonPressed(name) {
             return s2d.state.input.buttons[name].pressed && !s2d.state.input.buttons[name].repeat;
         },
