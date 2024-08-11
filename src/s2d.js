@@ -408,6 +408,10 @@ class s2d {
             s2d.state.input.buttons[name] = { pressed: false, repeat: false, keys };
         },
 
+        unregisterButton(name) {
+            delete s2d.state.input.buttons[name];
+        },
+
         setMaxTimeBetweenDoublePress(seconds) {
             s2d.state.input.maxTimeBetweenDoublePress = seconds;
         },
