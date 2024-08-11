@@ -761,7 +761,7 @@ class s2d {
     };
 
     static data = {
-        
+
         read(name) {
             return s2d.data.deepCopy(s2d.state.data[name]);
         },
