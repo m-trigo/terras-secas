@@ -408,6 +408,10 @@ class s2d {
             s2d.state.input.buttons[name] = { pressed: false, repeat: false, keys };
         },
 
+        unregisterButton(name) {
+            delete s2d.state.input.buttons[name];
+        },
+
         setMaxTimeBetweenDoublePress(seconds) {
             s2d.state.input.maxTimeBetweenDoublePress = seconds;
         },
@@ -447,6 +451,15 @@ class s2d {
 
         setIdleTriggers(buttons) {
             s2d.state.input.idleTriggers = buttons
+        },
+
+        anyButtonPressed() {
+            for (let buttonName of Object.keys(s2d.state.input.buttons)) {
+                if (s2d.state.input.buttons[buttonName].pressed) {
+                    return true;
+                }
+            }
+            return false;
         },
 
         buttonPressed(name) {
@@ -748,7 +761,7 @@ class s2d {
     };
 
     static data = {
-        
+
         read(name) {
             return s2d.data.deepCopy(s2d.state.data[name]);
         },
