@@ -48,12 +48,12 @@ function combatRound() {
         if (clearInput) {
             input.clear();
         }
-
-        terminal.clear();
+        
         combatLog.forEach(logLine => terminal.append(logLine));
     }
 
     if (turnsElapsed < turn) {
+        terminal.clear();
         enemyTurn();
         turnsElapsed++;
         combatStep = 0;
