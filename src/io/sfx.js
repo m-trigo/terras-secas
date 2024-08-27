@@ -1,3 +1,5 @@
+/*  needsPressToContinue    */
+
 const minBlockInSeconds = 0.1;
 let blockStartedAt = 0;
 
@@ -28,3 +30,5 @@ function needsPressToContinue() {
 
     return blockingLineIndex != -1;
 }
+
+/*  characterInjury         */

@@ -13,6 +13,8 @@ const alphabet = 'a b c d e f g h i j k l m n o p q r s t u v w x y z'.split(' '
 const digits = '0 1 2 3 4 5 6 7 8 9'.split(' ');
 const margin = 4;
 
+let nowPlaying = '';
+
 function registerKeyboard() {
     alphabet.forEach(letter => s2d.input.registerButton(letter, [letter]));
     digits.forEach(digit => s2d.input.registerButton(digit, [digit]));
@@ -105,6 +107,7 @@ function drawParty() {
     partyMemberNames.forEach(name => {
 
         // Will this work? Copy or Ref?
+        // Good question, but it's read-only usage so it doesn't matter
         character = party.members[name];
 
         terminal2.append("");
@@ -122,12 +125,26 @@ function drawParty() {
     });
 }
 
+function stopNowPlayingStartTrack(audioName) {
+    if (nowPlaying !== '') {
+        s2d.audio.pause(nowPlaying);
+        console.log(`stopping ${nowPlaying}`);
+    }
+    s2d.audio.play(audioName);
+    nowPlaying = audioName;
+}
+
 function load() {
     s2d.assets.loadFontFamily('SF Mono Regular', 'fonts/SFMonoRegular.otf');
     s2d.assets.loadAudio('log-1', './audio/log-1.mp3');
 
     // TODO: Need an error message if the file has the wrong name
+    // Nick halp
     s2d.assets.loadAudio('bgm-1', './audio/wake-up-the-night.mp3');
+
+    s2d.assets.loadAudio('bgm-2', './audio/Earthen Fury 1-0.mp3');
+    s2d.assets.loadAudio('bgm-2-1', './audio/Earthen Fury 1-1.mp3');
+    s2d.assets.loadAudio('bgm-2-2', './audio/Earthen Fury 1-2.mp3');
 }
 
 function init() {
@@ -160,11 +177,29 @@ function update(dt) {
                 break;
 
             // Audio
+
+            // VERY TEMPORARY IMPLEMENTATION YES? YES
             case 'LOG 1':
-                s2d.audio.play('log-1');
+                stopNowPlayingStartTrack('log-1')
+                // s2d.audio.play('log-1');
                 break;
             case 'BGM 1':
-                s2d.audio.play('bgm-1');
+                stopNowPlayingStartTrack('bgm-1')
+                // s2d.audio.play('bgm-1');
+                nowPlaying = 'bgm-1';
+                break;
+            case 'BGM 2':
+            case 'BGM 2 PART 0':
+                stopNowPlayingStartTrack('bgm-2')
+                //s2d.audio.play('bgm-2');
+                break;
+            case 'BGM 2 PART 1':
+                stopNowPlayingStartTrack('bgm-2-1')
+                //s2d.audio.play('bgm-2-1');
+                break;
+            case 'BGM 2 PART 2':
+                stopNowPlayingStartTrack('bgm-2-2')
+                //s2d.audio.play('bgm-2-2');
                 break;
             default:
                 clearInput = false;

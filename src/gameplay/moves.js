@@ -1,6 +1,12 @@
-let moves = {
-    "mark" : null,
-}
+/*
+    Moves to Implement 
+
+    [x] Bite
+    [x] Stab
+    [ ] Escape
+    [ ] ???
+*/
+
 
 function bite(src, dst) {
     let total = d6() + d6();
@@ -34,6 +40,11 @@ function bite(src, dst) {
 
     log.push(lastLine);
     return log;
+}
+
+function escape() {
+    // Add failure
+    
 }
 
 function stab(src, dst) {
